@@ -30,7 +30,7 @@ const UserItem = ({user,handler,handlerIsLoading}) => {
                     bgcolor:"primary.main",
                     color:"white",
                     "&:hover":{
-                        bgcolor:"primary.dark",
+                        bgcolor:"green",
                     }
                 }}
                 onClick={()=> handler(_id)} disabled={handlerIsLoading}

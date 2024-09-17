@@ -52,3 +52,18 @@ export const SampleUsers = [{
     name:"Soham",
     _id:"2",
 }]
+
+export const SampleNotifications = [{
+    sender:{
+        avatar:["https://www.w3schools.com/howto/img_avatar.png"],
+        name:"Saurabh",
+    },
+    _id:"1",
+},
+{
+    sender:{
+        avatar:["https://www.w3schools.com/howto/img_avatar.png"],
+        name:"Soham Shinde",
+    },
+    _id:"2",
+}]
