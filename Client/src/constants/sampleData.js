@@ -49,8 +49,17 @@ export const SampleUsers = [{
 },
 {
     avatar:["https://www.w3schools.com/howto/img_avatar.png"],
-    name:"Soham",
+    name:"Ajay",
     _id:"2",
+},{
+    avatar:["https://www.w3schools.com/howto/img_avatar.png"],
+    name:"Atul",
+    _id:"3",
+},
+{
+    avatar:["https://www.w3schools.com/howto/img_avatar.png"],
+    name:"Soham",
+    _id:"4",
 }]
 
 export const SampleNotifications = [{
