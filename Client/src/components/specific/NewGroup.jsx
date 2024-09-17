@@ -16,6 +16,7 @@ const NewGroup = () => {
     setSelectedMembers((prev) => prev.includes(_id)? prev.filter((id)=> id!==_id)
     :[...prev,_id]);
   };
+  
   const submitHandler = () => {};
   const closeHandler = () =>{};
 
