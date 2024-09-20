@@ -1,3 +1,4 @@
+
 export const samplechats = [{
     avatar:["https://www.w3schools.com/howto/img_avatar.png"],
     name:"Saurabh ",
@@ -76,3 +77,34 @@ export const SampleNotifications = [{
     },
     _id:"2",
 }]
+
+
+export const SampleMessages = [
+    {
+        attachments : [],
+        content:"This Typed message by user",
+        _id:"sfnsdjkfkjjnsdnfkjsbnd",
+        sender:{
+            _id:"user._id",
+            name:"Chaman",
+        },
+        chat :"chatId",
+        createdAt:"2024-02-12T10:41:30.630Z",
+    },
+    {
+        attachments : [
+            {
+                public_id:"asdsda 2",
+                url:"https://www.w3schools.com/howto/img_avatar.png",
+            },
+        ],
+        content:"",
+        _id:"sfnsdjkfsdnfkjsbnd",
+        sender:{
+            _id:"sffrwww",
+            name:"Chaman 2",
+        },
+        chat :"chatId",
+        createdAt:"2024-02-12T10:41:30.630Z",
+    },
+];
