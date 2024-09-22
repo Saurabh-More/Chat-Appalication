@@ -5,10 +5,10 @@ import { SampleUsers } from "../../constants/sampleData.js"
 import UserItem from '../shared/UserItem'
 
 const NewGroup = () => {
-
+  
+  const groupName=useInputValidation("");
   const [members,setMembers] = useState(SampleUsers);
   const [selectedMembers,setSelectedMembers] = useState([]);
-  const groupName=useInputValidation("");
 
 
   const selectMemberHandler = (_id) =>
