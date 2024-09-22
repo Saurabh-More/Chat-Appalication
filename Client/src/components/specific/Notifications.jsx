@@ -1,6 +1,7 @@
 import React, { memo } from 'react'
 import { Avatar, Button, Dialog, DialogTitle, ListItem, Stack, Typography } from '@mui/material'
 import { SampleNotifications } from '../../constants/sampleData'
+import AvatarCard from '../shared/AvatarCard'
 
 const Notifications = () => {
 
@@ -11,7 +12,7 @@ const Notifications = () => {
 
   return (
     <Dialog open>
-        <Stack p={{xs:"1rem" , sm:"2rem"}} maxWidth={"25rem"}>
+        <Stack p={{xs:"1rem" , sm:"2rem"}} maxWidth={"45rem"}>
           <DialogTitle>Notifications</DialogTitle>
 
         {
@@ -32,8 +33,8 @@ const NotificationsItem = memo(({sender,_id,handler}) => {
   const {name,avatar} = sender;
   return (
     <ListItem>
-        <Stack direction={"row"} alignItems={"center"} spacing={"1rem"} width={"100%"}>
-            <Avatar/>
+        <Stack direction={"row"} alignItems={"center"} spacing={"0.5rem"} width={"100%"}>
+            <AvatarCard avatar={avatar}/>
             
             <Typography
                 variant="body1"
@@ -53,8 +54,9 @@ const NotificationsItem = memo(({sender,_id,handler}) => {
             <Stack direction={{
               xs:"column",
               sm:"row"
-            }}>
-              <Button onClick={() => handler({_id,isAccept:true})}>Accept</Button>
+            }}
+            gap={"1rem"}>
+              <Button variant="contained" onClick={() => handler({_id,isAccept:true})}>Accept</Button>
               <Button color="error" onClick={() => handler({_id,isAccept:false})}>Reject</Button>
             </Stack>
         </Stack>
