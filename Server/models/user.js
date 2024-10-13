@@ -1,4 +1,5 @@
-import {Schema,model, models} from "mongoose"
+import mongoose , { Schema, model } from "mongoose"
+import { hash } from "bcrypt"
 
 const schema=new Schema({
     name:{
@@ -32,5 +33,15 @@ const schema=new Schema({
     },
 },{timestamps:true,});
 
-export const User = models.User || model("User",schema);
+
+schema.pre("save",async function(next)
+{
+    // Do not hash the password if it is not changed. next() will end the current middleware 
+    if(!this.isModified("password"))next();
+
+    // hash the password
+    this.password=await hash(this.password,10);
+});
+
+export const User = mongoose.models.User || model("User",schema);
 
