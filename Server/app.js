@@ -3,10 +3,16 @@ import userRoute from "./routes/user.js"
 import { connectDB } from "./utils/features.js";
 
 import dotenv from "dotenv"
+import { errorMiddleware } from "./middlewares/error.js";
+import cookieParser from "cookie-parser";
+
+
+
 dotenv.config({
     path:"./.env",
 });
 
+// Connect the database 
 const mongoURI= process.env.MONGO_URI;
 const port = process.env.PORT || 3000 ;  
 connectDB(mongoURI);
@@ -14,14 +20,21 @@ connectDB(mongoURI);
 const app=express();
 
 //Using Middlewares here 
-app.use(express.json());
+app.use(express.json());    // To get data in JSON format
+app.use(cookieParser());    // Use to access the user cookies and set it 
+
+
+
+
+
+app.use("/user",userRoute);
 
 app.get("/",(req,res) => {
     res.send("Hello World");
 });
 
-app.use("/user",userRoute);
 
+app.use(errorMiddleware);
 app.listen(port,() => {
     console.log(`Server is running on port : ${port}`);
 })
