@@ -1,6 +1,13 @@
 import mongoose from "mongoose"
 import jwt from "jsonwebtoken"
 
+const cookieOptions = {
+    maxAge: 15*24*60*60*1000,
+    sameSite:"none",
+    httpOnly:true,
+    secure:true,
+}
+
 const connectDB = (uri) =>
 {
     mongoose
@@ -17,12 +24,7 @@ const sendToken = (res,user,statusCode,message)=>
 
     return res
     .status(statusCode)
-    .cookie("ChatApp-Token",token,{
-        maxAge: 15*24*60*60*1000,
-        sameSite:"none",
-        httpOnly:true,
-        secure:true,
-    })
+    .cookie("ChatApp-Token",token,cookieOptions)
     .json({
         success:true,
         message,

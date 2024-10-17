@@ -63,7 +63,7 @@ const getMyProfile = async (req,res) => {
     {
         const user=await User.findById(req.userId);
         return res
-        .status(400)
+        .status(200)
         .json({
             success:true,
             user
@@ -75,4 +75,47 @@ const getMyProfile = async (req,res) => {
     }
 };
 
-export { login,newUser,getMyProfile}
+const cookieOptions = {
+    maxAge: 0,
+    sameSite:"none",
+    httpOnly:true,
+    secure:true,
+}
+
+const logout = async(req,res) => {
+    try 
+    {
+        return res
+        .status(200)
+        .cookie("ChatApp-Token","",cookieOptions)
+        .json({
+            success:true,
+            message:"Logged out Successfully"
+        });
+    } 
+    catch (error) 
+    {
+        next(error);
+    }
+}
+
+const searchUser = async(req,res) => {
+    try 
+    {
+        const {name} = req.query;
+
+
+        return res
+        .status(200)
+        .json({
+            success:true,
+            message:"Search User Successfully"
+        });
+    } 
+    catch (error) 
+    {
+        next(error);
+    }
+}
+
+export { login,newUser,getMyProfile,logout,searchUser};
