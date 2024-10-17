@@ -31,5 +31,8 @@ const sendToken = (res,user,statusCode,message)=>
     }); 
 };
 
+const emitEvent = (req,event,users,data) =>{
+    console.log("Emmiting Event",event);
+}
 
-export { connectDB,sendToken} ;
+export { connectDB,sendToken,emitEvent} ;
