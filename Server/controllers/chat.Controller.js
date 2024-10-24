@@ -11,10 +11,7 @@ const newGroupChat = async(req,res,next)=>
     try 
     {
         const {name,members} = req.body;
-        if(members.length<2)
-        {
-            return next(new ErrorHandler("Group chat must have at least 3 members",400));
-        }    
+
 
         const allMembers=[...members , req.userId];
         await Chat.create({
@@ -50,7 +47,7 @@ const getMyChats = async (req, res, next) =>
 
         const transformedChats = chats.map(({ _id, name, members, groupChat }) => 
         {
-            const anotherMember = members.find(member => member._id.toString() !== req.userId);
+            const anotherMember = members.find(member => member._id.toString() !== req.userId.toString());
 
             return {
                 _id,
@@ -120,9 +117,6 @@ const addMembers = async(req,res,next) =>
     try 
     {
         const {chatId,members} = req.body;
-    
-        // if Members are not provided
-        if(!members || members.length<1)return next(new ErrorHandler("Please Provide numbers.",400));
 
         const chat= await Chat.findById(chatId);
 
@@ -500,7 +494,7 @@ const getMessages = async(req,res,next) =>
             Message.countDocuments({chat : chatId})
         ]);
 
-        const totalPages = Math.ceil(totalMessagesCount/resultPerPage);
+        const totalPages = Math.ceil(totalMessagesCount/resultPerPage) || 0;
 
         return res
         .status(200)
