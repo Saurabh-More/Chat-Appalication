@@ -9,20 +9,30 @@ import {NEW_REQUEST, REFECH_CHATS} from "../constants/events.js"
 // Create a new user and save it to the database and save Token in cookies 
 const newUser = async(req,res,next) =>
 {
-    const {name,username,password,bio}=req.body;
-
-    const avatar={
-        public_id:"rst",
-        url:"etgtg",
+    try 
+    {
+        const {name,username,password,bio}=req.body;
+    
+        const file=req.file;
+        if(!file) return next(new ErrorHandler("Please upload the avatar file.",400));
+    
+        const avatar={
+            public_id:"rst",
+            url:"etgtg",
+        }
+        const user=await User.create(
+            {   name: name,
+                username:username, 
+                password:password, 
+                avatar:avatar
+            });
+    
+        sendToken(res,user,201,"User Created Successfully");
+    } 
+    catch (error) 
+    {
+        return next(error);    
     }
-    const user=await User.create(
-        {   name: name,
-            username:username, 
-            password:password, 
-            avatar:avatar
-        });
-
-    sendToken(res,user,201,"User Created Successfully");
 }
 
 

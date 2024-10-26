@@ -290,14 +290,17 @@ const sendAttachments = async(req,res,next) =>
     try 
     {
         const  { chatId } =req.body;
+
+        const files=req.files || [];
+        if(files.length<1) return next(new ErrorHandler("Please Provide Attachments",400));
+        if(files.length>5) return next(new ErrorHandler("You can't Provide Attachmentsmore than 5",400));
+        
+        
         const chat=await Chat.findById(chatId);
         const me=await User.findById(req.userId,"name");
 
         if(!chat)return next(new ErrorHandler("Chat not found",404));
         
-        const files=req.files || [];
-        
-        if(files.length<1) return next(new ErrorHandler("Please Provide Attachments",400));
 
         const attachmeants=[];
 
