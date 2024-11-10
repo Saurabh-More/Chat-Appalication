@@ -8,6 +8,7 @@ import userRoute from "./routes/user.js";
 import chatRoute from "./routes/chat.js";
 
 import { v4 as uuid }  from "uuid";
+import cors from "cors";
 
 // Related To Socket
 import { createServer } from "http";
@@ -39,11 +40,19 @@ const io=new Server(server,{});
 //Using Middlewares here 
 app.use(express.json());    // To get data in JSON format
 app.use(cookieParser());    // Use to access the user cookies and set it 
+app.use(cors({
+    origin: [
+        "http://localhost:5173",
+        "http://localhost:4173",
+        process.env.CLIENT_URL,
+    ],
+    credentials:true,
+}));
 
 
 
-app.use("/user",userRoute);
-app.use("/chat",chatRoute);
+app.use("/api/v1/user",userRoute);
+app.use("/api/v1/chat",chatRoute);
 
 app.get("/",(req,res) => {
     res.send("Hello World");

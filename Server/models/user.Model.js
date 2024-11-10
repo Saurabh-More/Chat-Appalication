@@ -34,14 +34,15 @@ const schema=new Schema({
 },{timestamps:true,});
 
 
-schema.pre("save",async function(next)
-{
-    // Do not hash the password if it is not changed. next() will end the current middleware 
-    if(!this.isModified("password"))next();
+schema.pre("save", async function (next) {
+    // Do not hash the password if it is not changed
+    if (!this.isModified("password")) return next();
 
-    // hash the password
-    this.password=await hash(this.password,10);
+    // Hash the password
+    this.password = await hash(this.password, 10);
+    next();
 });
+
 
 export const User = mongoose.models.User || model("User",schema);
 
