@@ -9,6 +9,7 @@ import chatRoute from "./routes/chat.js";
 
 import { v4 as uuid }  from "uuid";
 import cors from "cors";
+import { v2 as cloudinary } from "cloudinary";
 
 // Related To Socket
 import { createServer } from "http";
@@ -27,6 +28,14 @@ dotenv.config({
 const mongoURI= process.env.MONGO_URI;
 const port = process.env.PORT || 3000 ;  
 connectDB(mongoURI);
+
+
+// Connect Cloudinary
+cloudinary.config({
+    cloud_name:process.env.CLOUDINARY_CLOUD_NAME,
+    api_key:process.env.CLOUDINARY_API_KEY,
+    api_secret:process.env.CLOUDINARY_API_SECRET,
+});
 
 // Store all Active Users IDs and Corresponding Socket IDs
 const userSocketIDs = new Map(); 

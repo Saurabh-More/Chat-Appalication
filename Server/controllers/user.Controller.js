@@ -2,9 +2,9 @@ import { compare } from "bcrypt";
 import {User} from "../models/user.Model.js";
 import {Request} from "../models/request.Model.js";
 import {Chat} from "../models/chat.Model.js";
-import { emitEvent, sendToken } from "../utils/features.js";
+import { emitEvent, sendToken, uploadFilesToCloudinary } from "../utils/features.js";
 import { ErrorHandler } from "../utils/utility.js";
-import {NEW_REQUEST, REFECH_CHATS} from "../constants/events.js"
+import {NEW_REQUEST, REFECH_CHATS} from "../constants/events.js";
 
 // Create a new user and save it to the database and save Token in cookies 
 const newUser = async(req,res,next) =>
@@ -15,13 +15,16 @@ const newUser = async(req,res,next) =>
     
         const file=req.file;
         if(!file) return next(new ErrorHandler("Please upload the avatar file.",400));
+
+        const result=await uploadFilesToCloudinary([file]);
     
         const avatar={
-            public_id:"rst",
-            url:"etgtg",
+            public_id:result[0].public_id,
+            url:result[0].url,
         }
         const user=await User.create(
             {   name: name,
+                bio:bio,
                 username:username, 
                 password:password, 
                 avatar:avatar
