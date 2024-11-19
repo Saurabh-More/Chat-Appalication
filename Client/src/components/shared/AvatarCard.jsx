@@ -7,7 +7,7 @@ const AvatarCard = ({avatar = [],max=4}) => {
     <Stack direction={"row"} spacing={0.5}>
         <AvatarGroup max={max} sx={{position:"relative"}}>
             <Box width={"5rem"} height={"3rem"}>
-            {avatar.map((i,index) => (
+            {(Array.isArray(avatar) ? avatar : [avatar]).map((i, index) => (
                 <Avatar
                     key={Math.random()*100}
                     src={transformImage(i)}

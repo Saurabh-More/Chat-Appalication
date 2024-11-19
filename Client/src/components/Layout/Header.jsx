@@ -6,8 +6,9 @@ import {Add as AddIcon,Menu as MenuIcon,Search as SearchIcon,Group as GroupIcon,
 import axios from 'axios';
 import { server } from '../../constants/config.js';
 import toast from 'react-hot-toast';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { userNotExists } from '../../redux/reducers/auth.js';
+import { setIsMobile, setIsSearch } from '../../redux/reducers/misc.js';
 
 const SearchDialog = lazy(() => import("../specific/Search.jsx"));
 const NotificationDialog = lazy(() => import("../specific/Notifications.jsx"));
@@ -20,28 +21,24 @@ const Header = () =>
   const navigate=useNavigate();
   const dispatch = useDispatch();
 
-
-  const [isMobile,setIsMobile]=useState(false);
-  const [isSearch,setIsSearch]=useState(false);
+  const { isSearch } = useSelector(state => state.misc);
   const [isNewGroup,setIsNewGroup]=useState(false);
   const [isNotification,setIsNotification]=useState(false);
 
-  const handleMobile = ()=>
-  {
-    setIsMobile(prev => !prev);
-  }
-  const openSearch = ()=>
-  {
-    setIsSearch(prev => !prev);
-  }
+  const handleMobile = () => dispatch(setIsMobile(true));
+  
+  const openSearch = () => dispatch(setIsSearch(true));
+
   const openNewGroup = ()=>
   {
     setIsNewGroup(prev => !prev);
   }
+
   const openNotification = ()=>
   {
     setIsNotification(prev => !prev);
   }
+
   const NavigateToGroup = () =>navigate("/groups")
 
   const logoutHandler = async ()=>
@@ -67,7 +64,7 @@ const Header = () =>
        }}>
           <Toolbar>
               <Typography variant="h6"sx={{display:{xs:"none",sm:"block"}}}>
-                chattu
+                Chat App
               </Typography>
               <Box sx={{display:{xs:"block",sm:"none"}}}>
                   <IconButton color="inherit" onClick={handleMobile}>
