@@ -9,6 +9,7 @@ const api = createApi({
     tagTypes:["Chat","User"],
 
     endpoints:(builder) => ({
+
         myChats : builder.query({
            query:() =>({
             url:"chat/my",
@@ -23,9 +24,44 @@ const api = createApi({
                 credentials:"include",
                }),
                providesTags:["User"],
-        })
+        }),
+
+        getNotifications : builder.query({
+            query:() => ({
+                url:"user/notifications",
+                credentials:"include",
+            }),
+            keepUnusedDataFor:0,
+        }),
+
+        sendFriendRequest : builder.mutation({
+            query:(data) => ({
+                url:"user/sendrequest",
+                method:"PUT",
+                credentials:"include",
+                body:data,
+            }),
+            invalidatesTags:["User"],
+        }),
+
+        acceptFriendRequest : builder.mutation({
+            query:(data) => ({
+                url:"user/acceptrequest",
+                method:"PUT",
+                credentials:"include",
+                body:data,
+            }),
+            invalidatesTags:["Chat"],
+        }),
+
     }),
 });
 
 export default api;
-export const { useMyChatsQuery,useLazySearchUserQuery } = api;
+export const { 
+    useMyChatsQuery,
+    useLazySearchUserQuery,
+    useSendFriendRequestMutation, 
+    useGetNotificationsQuery,
+    useAcceptFriendRequestMutation,
+} = api;
