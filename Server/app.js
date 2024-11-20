@@ -17,6 +17,8 @@ import { Server } from "socket.io";
 import { NEW_MESSAGE, NEW_MESSAGE_ALERT } from "./constants/events.js";
 import { getSockets } from "./lib/helper.js";
 import { Message } from "./models/message.Model.js";
+import { corsOptions } from "./constants/config.js";
+import { socketAuthenticator } from "./middlewares/auth.Middleware.js";
 
 
 
@@ -43,20 +45,15 @@ const userSocketIDs = new Map();
 const app=express();
 // Initializing Socket
 const server= createServer(app);
-const io=new Server(server,{});
+const io=new Server(server,{
+    cors:corsOptions,
+});
 
 
 //Using Middlewares here 
 app.use(express.json());    // To get data in JSON format
 app.use(cookieParser());    // Use to access the user cookies and set it 
-app.use(cors({
-    origin: [
-        "http://localhost:5173",
-        "http://localhost:4173",
-        process.env.CLIENT_URL,
-    ],
-    credentials:true,
-}));
+app.use(cors(corsOptions));
 
 
 
@@ -67,19 +64,22 @@ app.get("/",(req,res) => {
     res.send("Hello World");
 });
 
-io.use((socket,next) =>{});
+io.use((socket,next) =>
+{
+    cookieParser()(
+        socket.request,
+        socket.request.res,
+        async (err) => await socketAuthenticator(err,socket,next)
+    );
+});
 
 io.on("connection",(socket) =>
 {
-    const user = {
-        _id:"asdfg",
-        name:"Nambo",
-    }
+    const user = socket.user;
     userSocketIDs.set(user._id.toString(),socket.id);
     console.log("User Connected. Socket Id = ",userSocketIDs);
 
     socket.on(NEW_MESSAGE, async ({chatId,members,message}) =>{
-
 
         const messageForRealTime = {
             content:message,
@@ -102,7 +102,7 @@ io.on("connection",(socket) =>
         io.to(membersSockets).emit(NEW_MESSAGE,{
             chatId,
             message : messageForRealTime,
-        })
+        });
 
         io.to(membersSockets).emit(NEW_MESSAGE_ALERT,{chatId});
 
