@@ -1,9 +1,9 @@
+import { ALERT, NEW_MESSAGE, NEW_MESSAGE_ALERT, REFECH_CHATS } from "../constants/events.js";
+import { Chat } from "../models/chat.Model.js";
+import { Message } from "../models/message.Model.js";
+import { User } from "../models/user.Model.js";
+import { deleteFilesFromCloudinary, emitEvent, uploadFilesToCloudinary } from "../utils/features.js";
 import { ErrorHandler } from "../utils/utility.js";
-import { deleteFilesFromCloudinary, emitEvent } from "../utils/features.js";
-import { ALERT,NEW_ATTACHMENT,NEW_MESSAGE_ALERT,REFECH_CHATS } from "../constants/events.js";
-import { Chat } from "../models/chat.Model.js"
-import { User } from "../models/user.Model.js"
-import { Message } from "../models/message.Model.js"
 
 // Creating Group chat 
 const newGroupChat = async(req,res,next)=> 
@@ -294,19 +294,20 @@ const sendAttachments = async(req,res,next) =>
         const files=req.files || [];
         if(files.length<1) return next(new ErrorHandler("Please Provide Attachments",400));
         if(files.length>5) return next(new ErrorHandler("You can't Provide Attachmentsmore than 5",400));
+
         
         
         const chat=await Chat.findById(chatId);
         const me=await User.findById(req.userId,"name");
-
+        
         if(!chat)return next(new ErrorHandler("Chat not found",404));
         
-
-        const attachmeants=[];
+        
+        const attachments=await uploadFilesToCloudinary(files);
 
         const messageForRealTime = {
             content:"",
-            attachmeants,
+            attachments,
             sender:{
                 _id:me._id,
                 name:me.name,
@@ -314,16 +315,17 @@ const sendAttachments = async(req,res,next) =>
             chat:chatId,
         };
 
+
         const messageForDB = {
             content:"",
-            attachmeants,
+            attachments,
             sender:me._id,
             chat:chatId,
         };
 
         const message = await Message.create(messageForDB);
-
-        emitEvent(req,NEW_ATTACHMENT,chat.members,{
+       
+        emitEvent(req,NEW_MESSAGE,chat.members,{
             message:messageForRealTime,
             chatId,
         });
@@ -513,16 +515,7 @@ const getMessages = async(req,res,next) =>
     }
 }
 
-export { 
-    newGroupChat,
-    getMyChats,
-    getMyGroups,
-    addMembers,
-    removeMember,
-    leaveGroup,
-    sendAttachments,
-    getChatDetails,
-    renameGroup,
-    deleteChat,
-    getMessages,
+export {
+    addMembers, deleteChat, getChatDetails, getMessages, getMyChats,
+    getMyGroups, leaveGroup, newGroupChat, removeMember, renameGroup, sendAttachments
 };

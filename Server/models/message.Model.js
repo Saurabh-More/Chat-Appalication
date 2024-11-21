@@ -33,6 +33,5 @@ const schema=new Schema(
 {
     timestamps:true,
 });
-
 export const Message = mongoose.models.Message || model("Message",schema);
 

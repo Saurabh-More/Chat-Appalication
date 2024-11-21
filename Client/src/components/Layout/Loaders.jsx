@@ -1,7 +1,7 @@
 import React from 'react'
 import {Grid,Skeleton, Stack} from "@mui/material"
 
-export const LayoutLoader = () =>{
+const LayoutLoader = () =>{
     return (
         <Grid container height={"calc(100vh - 4rem)"} spacing={"1rem"}>
         <Grid item sm={4} md={3} sx={{
@@ -25,3 +25,9 @@ export const LayoutLoader = () =>{
     </Grid>
     )
 }
+
+const TypingLoader = () => {
+    return "Typing...";
+}
+
+export {LayoutLoader, TypingLoader};

@@ -14,7 +14,7 @@ import { v2 as cloudinary } from "cloudinary";
 // Related To Socket
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { NEW_MESSAGE, NEW_MESSAGE_ALERT } from "./constants/events.js";
+import { NEW_MESSAGE, NEW_MESSAGE_ALERT, START_TYPING, STOP_TYPING } from "./constants/events.js";
 import { getSockets } from "./lib/helper.js";
 import { Message } from "./models/message.Model.js";
 import { corsOptions } from "./constants/config.js";
@@ -48,6 +48,8 @@ const server= createServer(app);
 const io=new Server(server,{
     cors:corsOptions,
 });
+
+app.set("io",io);
 
 
 //Using Middlewares here 
@@ -99,6 +101,7 @@ io.on("connection",(socket) =>
         }
 
         const membersSockets= getSockets(members);
+
         io.to(membersSockets).emit(NEW_MESSAGE,{
             chatId,
             message : messageForRealTime,
@@ -106,11 +109,24 @@ io.on("connection",(socket) =>
 
         io.to(membersSockets).emit(NEW_MESSAGE_ALERT,{chatId});
 
-        try {
+        try 
+        {
             await Message.create(messageForDB);
-        } catch (error) {
+        } 
+        catch (error) 
+        {
             console.log(error);
         }
+    });
+
+    socket.on(START_TYPING,({members,chatId}) => {
+        const membersSockets = getSockets(members); 
+        socket.to(membersSockets).emit(START_TYPING,{chatId});
+    });
+
+    socket.on(STOP_TYPING,({members,chatId}) => {
+        const membersSockets = getSockets(members); 
+        socket.to(membersSockets).emit(STOP_TYPING,{chatId});
     });
 
     socket.on("disconnect",() =>
