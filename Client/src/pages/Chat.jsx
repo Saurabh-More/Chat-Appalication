@@ -2,20 +2,20 @@ import { useInfiniteScrollTop } from "6pp";
 import { AttachFile as AttachFileIcon, Send as SendIcon } from "@mui/icons-material";
 import { IconButton, Skeleton, Stack } from '@mui/material';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import FileMenu from '../components/dialogs/FileMenu';
 import AppLayout from '../components/Layout/AppLayout';
+import { TypingLoader } from "../components/Layout/Loaders";
 import MessageComponent from '../components/shared/MessageComponent';
 import { InputBox } from '../components/styles/StyledComponents';
 import { grayColor, orange } from '../constants/color';
 import { ALERT, NEW_MESSAGE, START_TYPING, STOP_TYPING } from '../constants/events';
 import { useErrors, useSocketEvents } from '../hooks/hook';
 import { useChatDetailsQuery, useGetMessagesQuery } from '../redux/api/api';
-import { getSocket } from '../socket';
-import { useDispatch } from "react-redux";
-import { setIsFileMenu } from "../redux/reducers/misc";
 import { removeNewMessagesAlert } from "../redux/reducers/chat";
-import { TypingLoader } from "../components/Layout/Loaders";
-import { useNavigate } from "react-router-dom";
+import { setIsFileMenu } from "../redux/reducers/misc";
+import { getSocket } from '../socket';
 
 
 
@@ -111,11 +111,11 @@ function Chat({chatId ,user}) {
   },[messages]);
 
   useEffect(() => {
-    if(!chatDetails.data?.chat)
+    if(chatDetails.isError)
     {
       return navigate("/");
     }
-  },[chatDetails.data]);
+  },[chatDetails.isError]);
 
   const newMessagesListener = useCallback((data) => {
     if(data.chatId !== chatId) return;
@@ -133,8 +133,9 @@ function Chat({chatId ,user}) {
   },[chatId]);
 
   const alertListener = useCallback((data) => {
+    if(data.chatId !== chatId ) return;
     const messageForAlert = {
-      content:data,
+      content:data.message,
       sender:{
           _id:"asdfghjkl",
           name:"Admin",

@@ -30,6 +30,7 @@ const sendToken = (res,user,statusCode,message)=>
     .cookie("ChatApp-Token",token,cookieOptions)
     .json({
         success:true,
+        user,
         message,
     }); 
 };

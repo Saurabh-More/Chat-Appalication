@@ -1,3 +1,4 @@
+import { useFileHandler, useInputValidation } from "6pp";
 import { CameraAlt as CameraAltIcon } from '@mui/icons-material';
 import { Avatar, Button, Container, IconButton, Paper, Stack, TextField, Typography } from '@mui/material';
 import axios from 'axios';
@@ -5,7 +6,6 @@ import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { VisuallyHiddenInput } from '../components/styles/StyledComponents.jsx';
-import { useFileHandler, useInputValidation } from "6pp";
 import { bgGradient } from '../constants/color.js';
 import { server } from '../constants/config.js';
 import { userExists } from '../redux/reducers/auth.js';
@@ -14,6 +14,8 @@ import { usernameValidator } from "../utils/validators.js";
 function Login() {
 
   const [isLogin,setIsLogin]=useState(true);
+  const [isLoading,setIsLoading]= useState(false);
+
   const toggleLogin=()=> setIsLogin((prev)=> !prev);
 
   const name=useInputValidation("");
@@ -27,6 +29,9 @@ function Login() {
   const HandleLogin = async (e)=>
   {
       e.preventDefault();
+
+      const toastId = toast.loading("Logging In...");
+      setIsLoading(true);
 
       const config = {
         withCredentials:true,
@@ -45,19 +50,27 @@ function Login() {
             },
             config,
         );
-        dispatch(userExists(true));
-        toast.success(data.message);
+        dispatch(userExists(data.user));
+        toast.success(data.message,{id:toastId});
 
       } 
       catch (error) 
       {
-        toast.error(error?.response?.data?.message || "Something Went Wrong");
+        toast.error(error?.response?.data?.message || "Something Went Wrong",{id:toastId});
+      }
+      finally
+      {
+        setIsLoading(false);
       }
   };
 
   const HandleSignUp = async (e)=>
   {
     e.preventDefault();
+
+    const toastId = toast.loading("Signing Up...");
+    
+    setIsLoading(true);
 
     const formData = new FormData();
     formData.append("avatar",avatar.file);
@@ -83,15 +96,19 @@ function Login() {
       );  
 
       dispatch(userExists(true));
-      toast.success(data.message);
+      toast.success(data.message,{id:toastId});
 
     } 
     catch (error) 
     {
-        toast.error(error?.response?.data?.message || "Something Went Wrong");
+        toast.error(error?.response?.data?.message || "Something Went Wrong",{id:toastId});
+    }
+    finally
+    {
+      setIsLoading(false);
     }
 
-  }
+  };
 
 
 
@@ -154,6 +171,7 @@ function Login() {
                   color="primary" 
                   type="submit"
                   fullWidth
+                  disabled={isLoading}
                   >
                   Login
                 </Button>
@@ -162,6 +180,7 @@ function Login() {
                   variant="text"
                   onClick={toggleLogin}
                   fullWidth
+                  disabled={isLoading}
                   >
                   Sign up Instead
                 </Button>
@@ -269,6 +288,7 @@ function Login() {
                   color="primary" 
                   type="submit"
                   fullWidth
+                  disabled={isLoading}
                   >
                   Sign Up
                 </Button>
@@ -277,6 +297,7 @@ function Login() {
                   variant="text"
                   onClick={toggleLogin}
                   fullWidth
+                  disabled={isLoading}
                   >
                   Login Instead
                 </Button>

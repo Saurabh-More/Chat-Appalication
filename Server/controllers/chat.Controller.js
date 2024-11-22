@@ -150,7 +150,7 @@ const addMembers = async(req,res,next) =>
             req,
             ALERT,
             chat.members,
-            `${allUsersName} has been added in the group`,
+            {message:`${allUsersName} has been added in the group`,chatId},
         )
 
         emitEvent(req,REFECH_CHATS,chat.members);
@@ -205,7 +205,7 @@ const removeMember = async(req,res,next) =>
             req,
             ALERT,
             chat.members,
-            `${userThatWillBeRemoved.name} has been removed from the group`,
+            { message : `${userThatWillBeRemoved.name} has been removed from the group`,chatId},
         )
 
         emitEvent(req,REFECH_CHATS,allChatMembers);
@@ -271,7 +271,7 @@ const leaveGroup = async(req,res,next) =>
             req,
             ALERT,
             chat.members,
-            `${user.name} has left the group`,
+            {message:`${user.name} has left the group`,chatId},
         )
                 
         return res
