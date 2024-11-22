@@ -16,8 +16,10 @@ const ChatItem = ({
 }) => {
   return (
     <Link 
-    sx={{padding:"0"}}
-    to={`/chat/${_id}`} onContextMenu={(e)=>handleDeleteChat(e,_id,groupChat)}>
+        sx={{padding:"0"}}
+        to={`/chat/${_id}`} 
+        onContextMenu={(e) => handleDeleteChat(e, _id, groupChat)}
+    >
         <div style={{
             display:"flex",
             gap:"1rem",

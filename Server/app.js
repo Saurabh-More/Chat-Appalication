@@ -79,7 +79,7 @@ io.on("connection",(socket) =>
 {
     const user = socket.user;
     userSocketIDs.set(user._id.toString(),socket.id);
-    console.log("User Connected. Socket Id = ",userSocketIDs);
+    // console.log("User Connected. Socket Id = ",userSocketIDs);
 
     socket.on(NEW_MESSAGE, async ({chatId,members,message}) =>{
 
@@ -131,7 +131,7 @@ io.on("connection",(socket) =>
 
     socket.on("disconnect",() =>
     {
-        console.log("User Disconnected.");
+        // console.log("User Disconnected.");
         userSocketIDs.delete(user._id.toString());
     });
 });

@@ -16,13 +16,17 @@ const errorMiddleware = (err,req,res,next) =>
         err.message=`Invalid format of ${err.path}`;
     }
 
-
-   
-    res.status(err.statusCode).json(
-    {
+    const response = {
         success:false,
-        message: process.env.NODE_ENV === "DEVELOPMENT" ? err : err.message,
-    });
+        message:err.message,
+    };
+   
+    if(process.env.NODE_ENV === "DEVELOPMENT")
+    {
+        response.error = err;
+    }
+
+    return res.status(err.statusCode).json(response);
 };
 
 export { errorMiddleware };
