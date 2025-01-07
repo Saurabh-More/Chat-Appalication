@@ -124,6 +124,9 @@ const searchUser = async(req,res,next) => {
 
         const allUsers = myChats.flatMap((chat) => chat.members);
 
+        // also adding  current user in allUsers
+        allUsers.push(req.userId);
+
         const allUsersExceptMeAndFriends = await User.find({
             _id: { $nin : allUsers },
             name:{$regex : name, $options : "i" },
